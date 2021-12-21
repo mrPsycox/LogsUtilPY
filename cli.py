@@ -3,7 +3,7 @@
 #%%
 import argparse
 from argparse import RawTextHelpFormatter
-# import select
+import select
 import sys
 
 
@@ -19,6 +19,11 @@ def first_lines():
 def last_lines():
     print("last function of PYTHONCLI app")
 
+def stdinput_check():
+    stdinput_flag = 0
+    if select.select([sys.stdin,],[],[],0.0)[0]:
+        stdinput_flag = 1
+    return stdinput_flag
 
 if __name__ == "__main__":
     parser = ThrowingArgumentParser()
@@ -28,31 +33,24 @@ if __name__ == "__main__":
     parser.add_argument("--timestamps",action='store_true',required=False,default=None, help="Print lines that contain a timestamp in HH:MM:SS format\n")
     parser.add_argument("--ipv4",action='store_true',required=False,default=None, help="Print lines that contain an IPv4 address, matching IPs are highlighted\n")
     parser.add_argument("--ipv6",action='store_true',required=False,default=None, help="Print lines that contain an IPv6 address, matching IPs are highlighted\n")
-    parser.add_argument("file", nargs='?',default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
+    parser.add_argument("file",action='store',nargs='?',default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
 
     args, unknown = parser.parse_known_args()
+ 
+    print(stdinput_check())
 
-    # logs_text = ""
-
-    #need to develop logical way to switch between stdin and positional file
-    # stdin_state = False
-    # if (select.select([sys.stdin,],[],[],0.0)[0]):
-    #     logs_text = sys.stdin
-    # else:
-    #     pass
-
-
-    #TODO 
-    #STARTING FROM STDIN, WE CAN DIVIDE THE ALGORITHM IN TWO MAIN ROOT
-
-
-    if(sys.stdin != None):
-        #ROOT A
-        print("ziopera")
+    stdin_flag = stdinput_check()
+    if(stdin_flag == 1 and args.file == 1):
+        input_text = sys.stdin.readlines()
+        print(input_text)
+        #Here we work with the stdin text
+    elif(stdin_flag == 0 and args.file != 1):
+        print("aofra")
+        #Here we work with the file specified as positional argument
     else:
-        #ROOT B
-        if(args.file.name != 1):
-        print("ziosalame")
+        print("Bad usage: is possible to use STDIN or file, not both.")
+        exit(1)
+
 
 
 
