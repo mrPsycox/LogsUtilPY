@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+
 #%%
 import argparse
 from argparse import RawTextHelpFormatter
-import fileinput
+# import select
+import sys
+
 
 class ArgumentParserError(Exception): pass
 
@@ -24,28 +28,52 @@ if __name__ == "__main__":
     parser.add_argument("--timestamps",action='store_true',required=False,default=None, help="Print lines that contain a timestamp in HH:MM:SS format\n")
     parser.add_argument("--ipv4",action='store_true',required=False,default=None, help="Print lines that contain an IPv4 address, matching IPs are highlighted\n")
     parser.add_argument("--ipv6",action='store_true',required=False,default=None, help="Print lines that contain an IPv6 address, matching IPs are highlighted\n")
-    parser.add_argument("file",default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
+    parser.add_argument("file", nargs='?',default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
 
     args, unknown = parser.parse_known_args()
 
+    # logs_text = ""
 
     #need to develop logical way to switch between stdin and positional file
-    stdin_state = False
-    if (select.select([sys.stdin,],[],[],0.0)[0]):
-        stdin_state = True
+    # stdin_state = False
+    # if (select.select([sys.stdin,],[],[],0.0)[0]):
+    #     logs_text = sys.stdin
+    # else:
+    #     pass
+
+
+    #TODO 
+    #STARTING FROM STDIN, WE CAN DIVIDE THE ALGORITHM IN TWO MAIN ROOT
+
+
+    if(sys.stdin != None):
+        #ROOT A
+        print("ziopera")
     else:
-        pass
+        #ROOT B
+        if(args.file.name != 1):
+        print("ziosalame")
+
+
+
+
+
+
+
+    # for lines in sys.stdin.readlines():
+    #     print(lines)
+
     
-    with open(args.file.name, 'r') as f:
-        log_lines = [line.strip() for line in f]
+    # with open(args.file.name, 'r') as f:
+    #     log_lines = [line.strip() for line in f]
     
-    if(args.file == 1):
-        print()
-    elif(args.first != None):
-        #need to print first num lines of test.log
-        print("I've to print the fist num lines")
-    elif(args.timestamps == True):
-        print("I've to print timestamps")
+    # if(args.file == 1):
+    #     print()
+    # elif(args.first != None):
+    #     #need to print first num lines of test.log
+    #     print("I've to print the fist num lines")
+    # elif(args.timestamps == True):
+    #     print("I've to print timestamps")
 
 
 
