@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     args, unknown = parser.parse_known_args()
  
-    print(stdinput_check())
+    #print(stdinput_check())
 
     stdin_flag = stdinput_check()
     if(stdin_flag == 1 and args.file == 1):
@@ -47,8 +47,11 @@ if __name__ == "__main__":
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
         #Here we work with the file specified as positional argument
-    else:
+    elif(stdin_flag == 0 and args.file == 1):
         print("Bad usage: is possible to use STDIN or file, not both.")
+        exit(1)
+    else:
+        print("Bad usage: please specify <filename.log> or use STDIN to cli.py")
         exit(1)
 
 
