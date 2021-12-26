@@ -19,11 +19,30 @@ def first_lines():
 def last_lines():
     print("last function of PYTHONCLI app")
 
+#HELPER FUNCTIONS --
+
+#stdinput_check: check if stdin is empty or not. Return 1 if stdin is empty, 0 if not.
 def stdinput_check():
     stdinput_flag = 0
     if select.select([sys.stdin,],[],[],0.0)[0]:
         stdinput_flag = 1
     return stdinput_flag
+
+#is_argument_set: check if specific argument is specified or not. Return True if argument is specified, False if not.
+def is_argument_set(arg_name):
+    if arg_name in sys.argv:
+        return True 
+    return False
+
+#check_parser_arguments: check if arguments are specified or not. Return the list of specified arguments, empty list if not.
+def check_parser_arguments(args):
+    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
+    intersected_args = []
+    for arg in target_args:
+        if(is_argument_set(arg) == True):
+            intersected_args.append(arg)
+    return intersected_args
+
 
 if __name__ == "__main__":
     parser = ThrowingArgumentParser()
@@ -36,30 +55,28 @@ if __name__ == "__main__":
     parser.add_argument("file",action='store',nargs='?',default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
 
     args, unknown = parser.parse_known_args()
- 
-    #print(stdinput_check())
+    
 
     stdin_flag = stdinput_check()
+
+    used_args = check_parser_arguments(args)
+
+    
     if(stdin_flag == 1 and args.file == 1):
         input_text = sys.stdin.readlines()
         print(input_text)
         #Here we work with the stdin text
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
-        #Here we work with the file specified as positional argument
+        #Here we work with the file specified as positional argument 
     elif(stdin_flag == 0 and args.file == 1):
-        print("Bad usage: is possible to use STDIN or file, not both.")
+        print("Bad usage: is possible to use STDIN or file, not both.\n")
+        parser.print_help()
         exit(1)
     else:
-        print("Bad usage: please specify <filename.log> or use STDIN to cli.py")
+        print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
+        parser.print_help()
         exit(1)
-
-
-
-
-
-
-
 
     # for lines in sys.stdin.readlines():
     #     print(lines)
@@ -75,10 +92,5 @@ if __name__ == "__main__":
     #     print("I've to print the fist num lines")
     # elif(args.timestamps == True):
     #     print("I've to print timestamps")
-
-
-
-
-
 
 # %%
