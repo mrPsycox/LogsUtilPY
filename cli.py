@@ -12,11 +12,31 @@ class ThrowingArgumentParser(argparse.ArgumentParser):
     def error(self, message):
         raise ArgumentParserError(message)
 
-def first_lines():
-    print("first function of PYTHONCLI app")
+def first_lines(text,numlines):
+    print("first function of PYTHONCLI app\n")
+    if(type(int(numlines)) is not int):
+        print("--first option need a whole number to be executed! \n Please try again passing an int value\n")
+        exit(1)
+    
+    ret = ""
 
-def last_lines():
+    i = 0
+
+    #TODO
+    #create a loop that iterate text numlines times. Need to check it (check itertools library!)
+    # while(i < type(int(numlines))):
+    #     print(i)
+    #     ret += text[i]
+    #     i += 1
+
+    return ret
+
+def last_lines(text,numlines):
     print("last function of PYTHONCLI app")
+
+def timestamps(text):
+    print("timestamps function of PYTHONCLI app")
+
 
 #HELPER FUNCTIONS --
 
@@ -26,7 +46,6 @@ def arguments_handler(used_args):
     priority_args = []
     secondary_args = []
     for arg in target_args:
-        print(arg)
         if(arg in used_args and arg == "--first"):
             priority_args.append(arg)
         elif(arg in used_args and arg == "--last"):
@@ -82,15 +101,16 @@ if __name__ == "__main__":
     used_args = check_parser_arguments(args)
 
     if(stdin_flag == 1 and args.file == 1):
-        input_text = sys.stdin.readlines()
-        #print(input_text)
         #Here we work with the stdin text
-        print(used_args)
+        input_text = sys.stdin.readlines()
         args_check = arguments_handler(used_args)
         primary_args = args_check[0]
         secondary_args = args_check[1]
         
-        ##NOW, NEED TO EXECUTE --first / --last options before other options
+        if("--first" in primary_args and "--last" in primary_args):
+            input_text_first = first_lines(input_text,args.first)
+            print(input_text_first)
+
 
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
