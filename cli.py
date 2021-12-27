@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 #%%
 import argparse
 from argparse import RawTextHelpFormatter
@@ -20,6 +19,27 @@ def last_lines():
     print("last function of PYTHONCLI app")
 
 #HELPER FUNCTIONS --
+
+#arguments_handler: from user_args, divide primary options to secondary options
+def arguments_handler(used_args):
+    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
+    priority_args = []
+    secondary_args = []
+    for arg in target_args:
+        print(arg)
+        if(arg in used_args and arg == "--first"):
+            priority_args.append(arg)
+        elif(arg in used_args and arg == "--last"):
+            priority_args.append(arg)
+        elif(arg in used_args and arg == "--timestamps"):
+            secondary_args.append(arg)
+        elif(arg in used_args and arg == "--ipv4"):
+            secondary_args.append(arg)
+        elif(arg in used_args and arg == "--ipv6"):
+            secondary_args.append(arg)
+        else:
+            pass
+    return priority_args,secondary_args
 
 #stdinput_check: check if stdin is empty or not. Return 1 if stdin is empty, 0 if not.
 def stdinput_check():
@@ -56,16 +76,22 @@ if __name__ == "__main__":
 
     args, unknown = parser.parse_known_args()
     
-
     stdin_flag = stdinput_check()
 
+    #here we have the list with arguments used
     used_args = check_parser_arguments(args)
 
-    
     if(stdin_flag == 1 and args.file == 1):
         input_text = sys.stdin.readlines()
-        print(input_text)
+        #print(input_text)
         #Here we work with the stdin text
+        print(used_args)
+        args_check = arguments_handler(used_args)
+        primary_args = args_check[0]
+        secondary_args = args_check[1]
+        
+        ##NOW, NEED TO EXECUTE --first / --last options before other options
+
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
         #Here we work with the file specified as positional argument 
@@ -78,19 +104,5 @@ if __name__ == "__main__":
         parser.print_help()
         exit(1)
 
-    # for lines in sys.stdin.readlines():
-    #     print(lines)
-
-    
-    # with open(args.file.name, 'r') as f:
-    #     log_lines = [line.strip() for line in f]
-    
-    # if(args.file == 1):
-    #     print()
-    # elif(args.first != None):
-    #     #need to print first num lines of test.log
-    #     print("I've to print the fist num lines")
-    # elif(args.timestamps == True):
-    #     print("I've to print timestamps")
 
 # %%
