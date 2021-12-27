@@ -13,32 +13,49 @@ class ThrowingArgumentParser(argparse.ArgumentParser):
         raise ArgumentParserError(message)
 
 def first_lines(text,numlines):
-    print("first function of PYTHONCLI app\n")
     if(type(int(numlines)) is not int):
         print("--first option need a whole number to be executed! \n Please try again passing an int value\n")
         exit(1)
-    
+    n = int(numlines)
+    if(n > len(text)):
+        print("Input text doesn't have %d lines. Please insert a valid value") % (n)
+        exit(1)
     ret = ""
-
     i = 0
-
-    #TODO
-    #create a loop that iterate text numlines times. Need to check it (check itertools library!)
-    # while(i < type(int(numlines))):
-    #     print(i)
-    #     ret += text[i]
-    #     i += 1
-
+    for i in range(0,n):
+        ret += text[i]
+    #ret variable return the first n lines of text given
     return ret
 
 def last_lines(text,numlines):
     print("last function of PYTHONCLI app")
+
 
 def timestamps(text):
     print("timestamps function of PYTHONCLI app")
 
 
 #HELPER FUNCTIONS --
+
+
+def primary_args_handler(primary_args):
+    final_text = ""
+    if("--first" in primary_args and "--last" in primary_args):
+        final_text = ""
+        input_text_first = first_lines(input_text,args.first)
+        final_text += input_text_first
+        input_text_last = last_lines(input_text,args.last)
+        final_text += input_text_last
+    elif("--first" in primary_args and "--last" not in primary_args):
+        input_text_first_tmp = first_lines(input_text,args.first)
+        final_text += input_text_first_tmp
+    elif("--first" not in primary_args and "--last" in primary_args):
+        input_text_last_tmp = last_lines(input_text.args.last)
+        final_text += input_text_last_tmp
+    else:
+        pass
+    return final_text
+
 
 #arguments_handler: from user_args, divide primary options to secondary options
 def arguments_handler(used_args):
@@ -106,11 +123,8 @@ if __name__ == "__main__":
         args_check = arguments_handler(used_args)
         primary_args = args_check[0]
         secondary_args = args_check[1]
-        
-        if("--first" in primary_args and "--last" in primary_args):
-            input_text_first = first_lines(input_text,args.first)
-            print(input_text_first)
-
+        text_to_pass = primary_args_handler(primary_args)
+        print(text_to_pass)
 
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
