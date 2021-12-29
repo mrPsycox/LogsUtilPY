@@ -121,11 +121,11 @@ def check_parser_arguments(args):
 if __name__ == "__main__":
     parser = ThrowingArgumentParser()
     parser = argparse.ArgumentParser(description='Welcome to log parsing utility v1.02, a Python CLI application that will help you parse logs of various kinds.\n\n\nIf FILE is omitted, standard input is used instead.\nIf multiple options are used at once, the result is the intersection of their results.\nExample supported usage:\n------------------------\n./util.py -h\n<prints help>\n\ncat test_0.log | ./util.py --first 10\n<prints the first 10 lines of test_0.log>\n\n./utils.py --timestamps test_2.log\n<prints any lines from test_2.log that contain a timestamp>\n\n',formatter_class=RawTextHelpFormatter)
-    parser.add_argument("--first",action='store',required=False,default=None, help="Print first NUM lines\n")
-    parser.add_argument("--last",action='store',required=False,default=None, help="Print last NUM lines\n")
-    parser.add_argument("--timestamps",action='store_true',required=False,default=None, help="Print lines that contain a timestamp in HH:MM:SS format\n")
-    parser.add_argument("--ipv4",action='store_true',required=False,default=None, help="Print lines that contain an IPv4 address, matching IPs are highlighted\n")
-    parser.add_argument("--ipv6",action='store_true',required=False,default=None, help="Print lines that contain an IPv6 address, matching IPs are highlighted\n")
+    parser.add_argument('-f',"--first",action='store',required=False,default=None, help="Print first NUM lines")
+    parser.add_argument('-l',"--last",action='store',required=False,default=None, help="Print last NUM lines")
+    parser.add_argument('-t',"--timestamps",action='store_true',required=False,default=None, help="Print lines that contain a timestamp in HH:MM:SS format")
+    parser.add_argument('-i',"--ipv4",action='store_true',required=False,default=None, help="Print lines that contain an IPv4 address, matching IPs are highlighted")
+    parser.add_argument('-I',"--ipv6",action='store_true',required=False,default=None, help="Print lines that contain an IPv6 address, matching IPs are highlighted")
     parser.add_argument("file",action='store',nargs='?',default=1, type=argparse.FileType('r'), help="Specify a file <filename>.log")
 
     args, unknown = parser.parse_known_args()
@@ -158,6 +158,5 @@ if __name__ == "__main__":
         print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
         parser.print_help()
         exit(1)
-
 
 # %%
