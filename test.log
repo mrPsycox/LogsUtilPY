@@ -1,3 +1,4 @@
+primalineaaaaaaaaaaaaaaaaaaaaaaaa
 Dec 21 00:10:49 mrpsycox-VirtualBox systemd[1]: Starting Hostname Service...
 Dec 21 00:10:50 mrpsycox-VirtualBox dbus-daemon[699]: [system] Successfully activated service 'org.freedesktop.hostname1'
 Dec 21 00:10:50 mrpsycox-VirtualBox systemd[1]: Started Hostname Service.
@@ -17,3 +18,4 @@ Dec 21 00:11:18 mrpsycox-VirtualBox kernel: [42201.097933] [UFW BLOCK] IN=enp0s3
 [   23.594064] kernel: AVX or AES-NI instructions are not detected.
 [   24.021324] kernel: CPU feature 'AVX registers' is not supported.
 [   25.006281] kernel: aufs 5.x-rcN-20210215
+ultimalineaaaaaaaaaaaaaaaaaaaa

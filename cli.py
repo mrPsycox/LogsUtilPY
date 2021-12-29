@@ -20,19 +20,36 @@ def first_lines(text,numlines):
     if(n > len(text)):
         print("Input text doesn't have %d lines. Please insert a valid value") % (n)
         exit(1)
-    ret = ""
+    tmp = str()
     i = 0
     for i in range(0,n):
-        ret += text[i]
-    #ret variable return the first n lines of text given
-    return ret
+        tmp += text[i]
+
+    return tmp[:-1]
 
 def last_lines(text,numlines):
-    print("last function of PYTHONCLI app")
+    if(type(int(numlines)) is not int):
+        print("--last option need a whole number to be executed! \n Please try again passing an int value\n")
+        exit(1)
+    n = int(numlines)
+    if(n > len(text)):
+        print("Input text doesn't have %d lines. Please insert a valid value") % (n)
+        exit(1)
+    ret = str()
+    last_lines = text[-n:]
+    for i in range(0,len(last_lines)):
+        ret += last_lines[i]
 
+    return ret[:-1]
 
 def timestamps(text):
     print("timestamps function of PYTHONCLI app")
+
+def ipv4(text):
+    print("ipv4 function")
+
+def ipv6(text):
+    print("ipv6 function")
 
 
 #HELPER FUNCTIONS --
@@ -44,13 +61,14 @@ def primary_args_handler(primary_args):
         final_text = ""
         input_text_first = first_lines(input_text,args.first)
         final_text += input_text_first
+        final_text += "\n"
         input_text_last = last_lines(input_text,args.last)
         final_text += input_text_last
     elif("--first" in primary_args and "--last" not in primary_args):
         input_text_first_tmp = first_lines(input_text,args.first)
         final_text += input_text_first_tmp
     elif("--first" not in primary_args and "--last" in primary_args):
-        input_text_last_tmp = last_lines(input_text.args.last)
+        input_text_last_tmp = last_lines(input_text,args.last)
         final_text += input_text_last_tmp
     else:
         pass
@@ -128,6 +146,9 @@ if __name__ == "__main__":
 
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
+        with open(args.file.name, 'r') as f:
+            file_text = [line.strip() for line in f]
+        print(file_text)
         #Here we work with the file specified as positional argument 
     elif(stdin_flag == 0 and args.file == 1):
         print("Bad usage: is possible to use STDIN or file, not both.\n")
