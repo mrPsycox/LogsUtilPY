@@ -44,6 +44,8 @@ def last_lines(text,numlines):
 
 def timestamps(text):
     print("timestamps function of PYTHONCLI app")
+    regex_exp = "^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$"
+    return regex_exp
 
 def ipv4(text):
     print("ipv4 function")
@@ -74,6 +76,29 @@ def primary_args_handler(primary_args):
         pass
     return final_text
 
+def secondary_args_handler(secondary_args):
+    print(secondary_args)
+    final_text = ""
+    if("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" not in secondary_args):
+        print("only timestamps")
+        timestamps_ret = timestamps(text_to_pass)
+        final_text += timestamps_ret
+    elif("--timestamps" not in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
+        print("only ipv4")
+    elif("--timestamps" not in secondary_args and "--ipv4" not in secondary_args and "--ipv6" in secondary_args):
+        print("only ipv6")
+    elif("--timestamps" in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
+        print("timestamps and ipv4")
+    elif("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" in secondary_args):
+        print("timestamps and ipv6")
+    elif("--timestamps" not in secondary_args and "--ipv4" in secondary_args and "--ipv6" in secondary_args):
+        print("ipv4 and ipv6")
+    elif("--timestamps" in secondary_args and "--ipv4" in secondary_args and "--ipv6" in secondary_args):
+        print("all together")
+    
+    return final_text
+    
+    
 
 #arguments_handler: from user_args, divide primary options to secondary options
 def arguments_handler(used_args):
@@ -142,7 +167,12 @@ if __name__ == "__main__":
         primary_args = args_check[0]
         secondary_args = args_check[1]
         text_to_pass = primary_args_handler(primary_args)
-        print(text_to_pass)
+        if(len(secondary_args) == 0):
+            print(text_to_pass)
+        else:
+            text_to_print = secondary_args_handler(secondary_args)
+            print(text_to_pass)
+        
 
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
