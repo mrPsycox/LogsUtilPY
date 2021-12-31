@@ -171,7 +171,7 @@ if __name__ == "__main__":
             print(text_to_pass)
         else:
             text_to_print = secondary_args_handler(secondary_args)
-            print(text_to_pass)
+            print(text_to_print)
         
 
     elif(stdin_flag == 0 and args.file != 1):
