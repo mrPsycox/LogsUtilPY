@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #%%
+from _typeshed import NoneType
 import argparse
 from argparse import RawTextHelpFormatter
 import select
 import sys
-
+import re
 
 class ArgumentParserError(Exception): pass
 
@@ -45,7 +46,8 @@ def last_lines(text,numlines):
 def timestamps(text):
     print("timestamps function of PYTHONCLI app")
     regex_exp = "^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$"
-    return regex_exp
+    ret = re.match(regex_exp,text)
+    return ret
 
 def ipv4(text):
     print("ipv4 function")
