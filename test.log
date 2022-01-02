@@ -1,5 +1,8 @@
 primalineaaaaaaaaaaaaaaaaaaaaaaaa
 secondalinea 23:42:58
+terzalinea2:22:44
+quarta00:00:00
+12:22:17  mrpsycox-VirtualBox systemd[1]:
 Dec 21 00:10:49 mrpsycox-VirtualBox systemd[1]: Starting Hostname Service...
 Dec 21 00:10:50 mrpsycox-VirtualBox dbus-daemon[699]: [system] Successfully activated service 'org.freedesktop.hostname1'
 Dec 21 00:10:50 mrpsycox-VirtualBox systemd[1]: Started Hostname Service.

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #%%
-from _typeshed import NoneType
 import argparse
 from argparse import RawTextHelpFormatter
 import select
@@ -44,9 +43,13 @@ def last_lines(text,numlines):
     return ret[:-1]
 
 def timestamps(text):
-    print("timestamps function of PYTHONCLI app")
-    regex_exp = "^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$"
-    ret = re.match(regex_exp,text)
+    ret =""
+    finds = re.findall("^.*(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d).*",text,re.MULTILINE)
+    if(len(finds) == 0):
+        pass
+    else:
+        for line in finds:
+            ret += (line + "\n")
     return ret
 
 def ipv4(text):
@@ -78,12 +81,10 @@ def primary_args_handler(primary_args):
         pass
     return final_text
 
-def secondary_args_handler(secondary_args):
-    print(secondary_args)
+def secondary_args_handler(text,secondary_args):
     final_text = ""
     if("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" not in secondary_args):
-        print("only timestamps")
-        timestamps_ret = timestamps(text_to_pass)
+        timestamps_ret = timestamps(text)
         final_text += timestamps_ret
     elif("--timestamps" not in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
         print("only ipv4")
@@ -168,13 +169,22 @@ if __name__ == "__main__":
         args_check = arguments_handler(used_args)
         primary_args = args_check[0]
         secondary_args = args_check[1]
-        text_to_pass = primary_args_handler(primary_args)
-        if(len(secondary_args) == 0):
-            print(text_to_pass)
-        else:
-            text_to_print = secondary_args_handler(secondary_args)
-            print(text_to_print)
         
+        if(len(primary_args) != 0):
+            text_to_pass = primary_args_handler(primary_args)
+            if(len(secondary_args) == 0):
+                print(text_to_pass)
+            else:
+                text_to_print = secondary_args_handler(text_to_pass,secondary_args)
+                print(text_to_print.rstrip())
+        else:
+            if(len(secondary_args) == 0):
+                print("Bad usage: is possible to use STDIN or file, not both.\n")
+                parser.print_help()
+                exit(1)
+            else:
+                text_to_print = secondary_args_handler(''.join(input_text),secondary_args)
+                print(text_to_print.rstrip())        
 
     elif(stdin_flag == 0 and args.file != 1):
         print("aofra")
