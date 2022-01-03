@@ -5,6 +5,7 @@ from argparse import RawTextHelpFormatter
 import select
 import sys
 import re
+from colorama import init, Fore
 
 class ArgumentParserError(Exception): pass
 
@@ -120,12 +121,23 @@ def secondary_args_handler(text,secondary_args):
         ipv6_merged_text = ipv6(ipv4_merged_text)
         final_text += ipv6_merged_text
 
+    highlighted_final_text = highlight_text(final_text,secondary_args)
     
-    return final_text
+    return highlighted_final_text
     
-    
+def highlight_text(text,secondary_args):
+    ipv6regex = r'''(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$)'''    
+    ret = text
+    if("--ipv4" in secondary_args and "--ipv6" in secondary_args):
+        tmp = re.sub(r'''((?:[0-9]{1,3}\.){3}[0-9]{1,3})''', Fore.RED + r'\1' + Fore.RESET, text)
+        ret = re.sub(ipv6regex,Fore.RED + r'\1' + Fore.RESET, tmp)
+    elif("--ipv4" in secondary_args and "--ipv6" not in secondary_args):
+        ret = re.sub(r'''((?:[0-9]{1,3}\.){3}[0-9]{1,3})''', Fore.RED + r'\1' + Fore.RESET, text)
+    elif("--ipv4" not in secondary_args and "--ipv6" in secondary_args):
+        ret = re.sub(ipv6regex,Fore.RED + r'\1' + Fore.RESET, text)
 
-#arguments_handler: from user_args, divide primary options to secondary options
+    return ret
+
 def arguments_handler(used_args):
     target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
     priority_args = []
@@ -145,20 +157,17 @@ def arguments_handler(used_args):
             pass
     return priority_args,secondary_args
 
-#stdinput_check: check if stdin is empty or not. Return 1 if stdin is empty, 0 if not.
 def stdinput_check():
     stdinput_flag = 0
     if select.select([sys.stdin,],[],[],0.0)[0]:
         stdinput_flag = 1
     return stdinput_flag
 
-#is_argument_set: check if specific argument is specified or not. Return True if argument is specified, False if not.
 def is_argument_set(arg_name):
     if arg_name in sys.argv:
         return True 
     return False
 
-#check_parser_arguments: check if arguments are specified or not. Return the list of specified arguments, empty list if not.
 def check_parser_arguments(args):
     target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
     intersected_args = []
@@ -198,7 +207,10 @@ if __name__ == "__main__":
                 print(text_to_pass)
             else:
                 text_to_print = secondary_args_handler(text_to_pass,secondary_args)
-                print(text_to_print.rstrip())
+                if(text_to_print != ""):
+                    print(text_to_print.rstrip())
+                else:
+                    print("No matches :(")
         else:
             if(len(secondary_args) == 0):
                 print("Bad usage: options not specified.\n")
@@ -206,8 +218,10 @@ if __name__ == "__main__":
                 exit(1)
             else:
                 text_to_print = secondary_args_handler(''.join(input_text),secondary_args)
-                print(text_to_print.rstrip())        
-
+                if(text_to_print != ""):
+                    print(text_to_print.rstrip())
+                else:
+                    print("No matches :(")
     elif(stdin_flag == 0 and args.file != 1):
         with open(args.file.name, 'r') as f:
             file_text = f.readlines()
