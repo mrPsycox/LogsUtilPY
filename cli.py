@@ -53,29 +53,40 @@ def timestamps(text):
     return ret
 
 def ipv4(text):
-    print("ipv4 function")
+    ret = ""
+    finds = re.findall("^.*(?:[0-9]{1,3}\.){3}[0-9]{1,3}.*",text,re.MULTILINE)
+    if(len(finds) == 0):
+        pass
+    else:
+        for line in finds:
+            ret += (line + "\n")
+    return ret
 
 def ipv6(text):
-    print("ipv6 function")
-
+    ret = ""
+    for line in text.split("\n"):
+        if(re.match("^.*(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$).*",line)):
+            ret += (line + "\n")
+        else:
+            pass
+    return ret
 
 #HELPER FUNCTIONS --
 
-
-def primary_args_handler(primary_args):
+def primary_args_handler(text,primary_args):
     final_text = ""
     if("--first" in primary_args and "--last" in primary_args):
         final_text = ""
-        input_text_first = first_lines(input_text,args.first)
+        input_text_first = first_lines(text,args.first)
         final_text += input_text_first
         final_text += "\n"
-        input_text_last = last_lines(input_text,args.last)
+        input_text_last = last_lines(text,args.last)
         final_text += input_text_last
     elif("--first" in primary_args and "--last" not in primary_args):
-        input_text_first_tmp = first_lines(input_text,args.first)
+        input_text_first_tmp = first_lines(text,args.first)
         final_text += input_text_first_tmp
     elif("--first" not in primary_args and "--last" in primary_args):
-        input_text_last_tmp = last_lines(input_text,args.last)
+        input_text_last_tmp = last_lines(text,args.last)
         final_text += input_text_last_tmp
     else:
         pass
@@ -87,9 +98,11 @@ def secondary_args_handler(text,secondary_args):
         timestamps_ret = timestamps(text)
         final_text += timestamps_ret
     elif("--timestamps" not in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
-        print("only ipv4")
+        ipv4_ret = ipv4(text)
+        final_text += ipv4_ret
     elif("--timestamps" not in secondary_args and "--ipv4" not in secondary_args and "--ipv6" in secondary_args):
-        print("only ipv6")
+        ipv6_ret = ipv6(text)
+        final_text += ipv6_ret        
     elif("--timestamps" in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
         print("timestamps and ipv4")
     elif("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" in secondary_args):
@@ -171,7 +184,7 @@ if __name__ == "__main__":
         secondary_args = args_check[1]
         
         if(len(primary_args) != 0):
-            text_to_pass = primary_args_handler(primary_args)
+            text_to_pass = primary_args_handler(input_text,primary_args)
             if(len(secondary_args) == 0):
                 print(text_to_pass)
             else:
@@ -179,7 +192,7 @@ if __name__ == "__main__":
                 print(text_to_print.rstrip())
         else:
             if(len(secondary_args) == 0):
-                print("Bad usage: is possible to use STDIN or file, not both.\n")
+                print("Bad usage: options not specified.\n")
                 parser.print_help()
                 exit(1)
             else:
@@ -187,11 +200,29 @@ if __name__ == "__main__":
                 print(text_to_print.rstrip())        
 
     elif(stdin_flag == 0 and args.file != 1):
-        print("aofra")
         with open(args.file.name, 'r') as f:
-            file_text = [line.strip() for line in f]
-        print(file_text)
+            file_text = f.readlines()
         #Here we work with the file specified as positional argument 
+        args_check2 = arguments_handler(used_args)
+        primary_args2 = args_check2[0]
+        secondary_args2 = args_check2[1]
+
+        if(len(primary_args2) != 0):
+            text_to_pass2 = primary_args_handler(file_text,primary_args2)
+            if(len(secondary_args2) == 0):
+                print(text_to_pass2.rstrip())
+            else:
+                text_to_print2 = secondary_args_handler(text_to_pass2,secondary_args2)
+                print(text_to_print2.rstrip())
+        else:
+            if(len(secondary_args2) == 0):
+                print("Bad usage: options not specified.\n")
+                parser.print_help()
+                exit(1)
+            else:
+                text_to_print2 = secondary_args_handler(''.join(file_text),secondary_args2)
+                print(text_to_print2.rstrip())
+                
     elif(stdin_flag == 0 and args.file == 1):
         print("Bad usage: is possible to use STDIN or file, not both.\n")
         parser.print_help()

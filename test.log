@@ -1,17 +1,17 @@
-primalineaaaaaaaaaaaaaaaaaaaaaaaa
+primalineaaaaaaaaaaaaaaaaaaaaaaaa 192.169.2.34
 secondalinea 23:42:58
 terzalinea2:22:44
-quarta00:00:00
+quarta00:00:00 2607:f0d0:1002:0051:0000:0000:0000:0004
 12:22:17  mrpsycox-VirtualBox systemd[1]:
 Dec 21 00:10:49 mrpsycox-VirtualBox systemd[1]: Starting Hostname Service...
 Dec 21 00:10:50 mrpsycox-VirtualBox dbus-daemon[699]: [system] Successfully activated service 'org.freedesktop.hostname1'
-Dec 21 00:10:50 mrpsycox-VirtualBox systemd[1]: Started Hostname Service.
+Dec 21 00:10:50 mrpsycox-VirtualBox systemd[1]: Started Hostname Service. 
 Dec 21 00:11:18 mrpsycox-VirtualBox kernel: [42201.097933] [UFW BLOCK] IN=enp0s3 OUT= MAC=01:00:5e:00:00:01:10:13:31:bc:b9:66:08:00 SRC=192.168.1.1 DST=224.0.0.1 LEN=32 TOS=0x00 PREC=0xC0 TTL=1 ID=0 DF PROTO=2
 [   19.452348] kernel: audit: type=1400 audit(1639996271.256:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="lsb_release" pid=657 comm="apparmor_parser"
 [   19.455835] kernel: audit: type=1400 audit(1639996271.260:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="nvidia_modprobe" pid=659 comm="apparmor_parser"
 [   19.455843] kernel: audit: type=1400 audit(1639996271.260:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="nvidia_modprobe//kmod" pid=659 comm="apparmor_parser"
 [   19.464338] kernel: audit: type=1400 audit(1639996271.260:11): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=658 comm="apparmor_parser"
-[   21.125276] kernel: NET: Registered protocol family 15
+[   21.125276] kernel: 192.169.2.45NET: Registered protocol family 15
 [   22.258656] kernel: cryptd: max_cpu_qlen set to 1000
 [   22.364019] kernel: CPU feature 'AVX registers' is not supported.
 [   22.870548] kernel: e1000: enp0s3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
@@ -19,7 +19,9 @@ Dec 21 00:11:18 mrpsycox-VirtualBox kernel: [42201.097933] [UFW BLOCK] IN=enp0s3
 [   23.064668] kernel: CPU feature 'AVX registers' is not supported.
 [   23.223696] kernel: CPU feature 'AVX registers' is not supported.
 [   23.508695] kernel: AVX or AES-NI instructions are not detected.
-[   23.594064] kernel: AVX or AES-NI instructions are not detected.
-[   24.021324] kernel: CPU feature 'AVX registers' is not supported.
+[   23.594064] kernel: AVX or AES-NI instructions are not detected. ciao 
+[   24.021324] kernel: CPU feature 'AVX registers' is not supported. 2607:f0d0:1002:0051:0000:0000::0004
 [   25.006281] kernel: aufs 5.x-rcN-20210215
+2607:f0d0:1002:0051:0000:0000:0000:0004 
+1248:aabb:1212:0051::4089:1adf
 ultimalineaaaaaaaaaaaaaaaaaaaa
