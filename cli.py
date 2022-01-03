@@ -76,7 +76,6 @@ def ipv6(text):
 def primary_args_handler(text,primary_args):
     final_text = ""
     if("--first" in primary_args and "--last" in primary_args):
-        final_text = ""
         input_text_first = first_lines(text,args.first)
         final_text += input_text_first
         final_text += "\n"
@@ -104,13 +103,23 @@ def secondary_args_handler(text,secondary_args):
         ipv6_ret = ipv6(text)
         final_text += ipv6_ret        
     elif("--timestamps" in secondary_args and "--ipv4" in secondary_args and "--ipv6" not in secondary_args):
-        print("timestamps and ipv4")
+        timestamps_ret_text = timestamps(text)
+        ipv4_merged_text = ipv4(timestamps_ret_text)
+        final_text += ipv4_merged_text
     elif("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" in secondary_args):
-        print("timestamps and ipv6")
+        timestamps_ret_text = timestamps(text)
+        ipv6_merged_text = ipv6(timestamps_ret_text)
+        final_text += ipv6_merged_text
     elif("--timestamps" not in secondary_args and "--ipv4" in secondary_args and "--ipv6" in secondary_args):
-        print("ipv4 and ipv6")
+        ipv4_merged_text = ipv4(text)
+        ipv6_merged_text = ipv6(ipv4_merged_text)
+        final_text += ipv6_merged_text      
     elif("--timestamps" in secondary_args and "--ipv4" in secondary_args and "--ipv6" in secondary_args):
-        print("all together")
+        timestamps_ret = timestamps(text)
+        ipv4_merged_text = ipv4(timestamps_ret)
+        ipv6_merged_text = ipv6(ipv4_merged_text)
+        final_text += ipv6_merged_text
+
     
     return final_text
     
@@ -213,7 +222,10 @@ if __name__ == "__main__":
                 print(text_to_pass2.rstrip())
             else:
                 text_to_print2 = secondary_args_handler(text_to_pass2,secondary_args2)
-                print(text_to_print2.rstrip())
+                if(text_to_print2 != ""):
+                    print(text_to_print2.rstrip())
+                else:
+                    print("No matches :(")
         else:
             if(len(secondary_args2) == 0):
                 print("Bad usage: options not specified.\n")
@@ -221,7 +233,10 @@ if __name__ == "__main__":
                 exit(1)
             else:
                 text_to_print2 = secondary_args_handler(''.join(file_text),secondary_args2)
-                print(text_to_print2.rstrip())
+                if(text_to_print2 != ""):
+                    print(text_to_print2.rstrip())
+                else:
+                    print("No matches :(")
                 
     elif(stdin_flag == 0 and args.file == 1):
         print("Bad usage: is possible to use STDIN or file, not both.\n")
