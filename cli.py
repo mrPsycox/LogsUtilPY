@@ -55,7 +55,8 @@ def timestamps(text):
 
 def ipv4(text):
     ret = ""
-    finds = re.findall("^.*(?:[0-9]{1,3}\.){3}[0-9]{1,3}.*",text,re.MULTILINE)
+    ipv4_regex = r'''.*(?:^|\b(?<!\.))(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:1?\d?\d|2[0-4]\d|25[0-5])){3}(?=$|[^\w.]).*'''
+    finds = re.findall(ipv4_regex,text,re.MULTILINE)
     if(len(finds) == 0):
         pass
     else:
@@ -124,15 +125,17 @@ def secondary_args_handler(text,secondary_args):
     highlighted_final_text = highlight_text(final_text,secondary_args)
     
     return highlighted_final_text
-    
+    #return final_text
+
 def highlight_text(text,secondary_args):
+    ipv4_regex = re.compile(r'(?:^|\b(?<!\.))(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:1?\d?\d|2[0-4]\d|25[0-5])){3}(?=$|[^\w.])')
     ipv6regex = r'''(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$)'''    
     ret = text
     if("--ipv4" in secondary_args and "--ipv6" in secondary_args):
-        tmp = re.sub(r'''((?:[0-9]{1,3}\.){3}[0-9]{1,3})''', Fore.RED + r'\1' + Fore.RESET, text)
+        tmp = re.sub(ipv4_regex, Fore.RED + r'\g<0>' + Fore.RESET, text)
         ret = re.sub(ipv6regex,Fore.RED + r'\1' + Fore.RESET, tmp)
     elif("--ipv4" in secondary_args and "--ipv6" not in secondary_args):
-        ret = re.sub(r'''((?:[0-9]{1,3}\.){3}[0-9]{1,3})''', Fore.RED + r'\1' + Fore.RESET, text)
+        ret = re.sub(ipv4_regex, Fore.RED + r'\g<0> ' + Fore.RESET, text)
     elif("--ipv4" not in secondary_args and "--ipv6" in secondary_args):
         ret = re.sub(ipv6regex,Fore.RED + r'\1' + Fore.RESET, text)
 
