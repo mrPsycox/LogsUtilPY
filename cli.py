@@ -74,6 +74,34 @@ def ipv6(text):
     return ret
 
 #HELPER FUNCTIONS --
+def check_primary_args(primary_args):
+    ret = []
+    for i, word in enumerate(primary_args):
+        if(word == "-f"):
+            primary_args[i] = "--first"
+        elif(word == "-l"):
+            primary_args[i] = "--last"
+        else:
+            pass
+
+    ret = list(set(primary_args))
+    return ret
+
+
+def check_secondary_args(secondary_args):
+    ret = []
+    for j, word in enumerate(secondary_args):
+        if(word == "-t"):
+            secondary_args[j] = "--timestamps"
+        elif(word == "-i"):
+            secondary_args[j] = "--ipv4"
+        elif(word == "-I"):
+            secondary_args[j] = "--ipv6"
+        else:
+            pass
+    ret = list(set(secondary_args))
+    return ret
+    
 
 def primary_args_handler(text,primary_args):
     final_text = ""
@@ -92,6 +120,7 @@ def primary_args_handler(text,primary_args):
     else:
         pass
     return final_text
+
 
 def secondary_args_handler(text,secondary_args):
     final_text = ""
@@ -142,19 +171,19 @@ def highlight_text(text,secondary_args):
     return ret
 
 def arguments_handler(used_args):
-    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
+    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6","-i","-t","-f","-l","-I"]
     priority_args = []
     secondary_args = []
     for arg in target_args:
-        if(arg in used_args and arg == "--first"):
+        if(arg in used_args and arg == "--first" or arg in used_args and arg == "-f"):
             priority_args.append(arg)
-        elif(arg in used_args and arg == "--last"):
+        elif(arg in used_args and arg == "--last" or arg in used_args and arg == "-l"):
             priority_args.append(arg)
-        elif(arg in used_args and arg == "--timestamps"):
+        elif(arg in used_args and arg == "--timestamps" or arg in used_args and arg == "-t"):
             secondary_args.append(arg)
-        elif(arg in used_args and arg == "--ipv4"):
+        elif(arg in used_args and arg == "--ipv4" or arg in used_args and arg == "-i"):
             secondary_args.append(arg)
-        elif(arg in used_args and arg == "--ipv6"):
+        elif(arg in used_args and arg == "--ipv6" or arg in used_args and arg == "-I"):
             secondary_args.append(arg)
         else:
             pass
@@ -171,8 +200,8 @@ def is_argument_set(arg_name):
         return True 
     return False
 
-def check_parser_arguments(args):
-    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6"]
+def check_parser_arguments():
+    target_args = ["--first","--last","--timestamps","--ipv4","--ipv6","-i","-t","-f","-l","-I"]
     intersected_args = []
     for arg in target_args:
         if(is_argument_set(arg) == True):
@@ -194,15 +223,16 @@ if __name__ == "__main__":
     
     stdin_flag = stdinput_check()
 
-    #here we have the list with arguments used
-    used_args = check_parser_arguments(args)
+    used_args = check_parser_arguments()
 
     if(stdin_flag == 1 and args.file == 1):
         #Here we work with the stdin text
         input_text = sys.stdin.readlines()
         args_check = arguments_handler(used_args)
-        primary_args = args_check[0]
-        secondary_args = args_check[1]
+        primary_args_tmp = args_check[0]
+        secondary_args_tmp = args_check[1]
+        primary_args = check_primary_args(primary_args_tmp)
+        secondary_args = check_secondary_args(secondary_args_tmp)
         
         if(len(primary_args) != 0):
             text_to_pass = primary_args_handler(input_text,primary_args)
@@ -216,7 +246,7 @@ if __name__ == "__main__":
                     print("No matches :(")
         else:
             if(len(secondary_args) == 0):
-                print("Bad usage: options not specified.\n")
+                print("Bad usage.\n")
                 parser.print_help()
                 exit(1)
             else:
@@ -230,8 +260,15 @@ if __name__ == "__main__":
             file_text = f.readlines()
         #Here we work with the file specified as positional argument 
         args_check2 = arguments_handler(used_args)
-        primary_args2 = args_check2[0]
-        secondary_args2 = args_check2[1]
+        primary_args2_tmp = args_check2[0]
+        secondary_args2_tmp = args_check2[1]
+        primary_args2 = check_primary_args(primary_args2_tmp)
+        secondary_args2 = check_secondary_args(secondary_args2_tmp)
+
+        #         primary_args_tmp = args_check[0]
+        # secondary_args_tmp = args_check[1]
+        # primary_args = check_primary_args(primary_args_tmp)
+        # # secondary_args = check_secondary_args(secondary_args_tmp)
 
         if(len(primary_args2) != 0):
             text_to_pass2 = primary_args_handler(file_text,primary_args2)
@@ -245,7 +282,7 @@ if __name__ == "__main__":
                     print("No matches :(")
         else:
             if(len(secondary_args2) == 0):
-                print("Bad usage: options not specified.\n")
+                print("Bad usage.\n")
                 parser.print_help()
                 exit(1)
             else:
