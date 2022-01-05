@@ -5,7 +5,7 @@ from argparse import RawTextHelpFormatter
 import select
 import sys
 import re
-from colorama import init, Fore
+from colorama import Fore
 
 class ArgumentParserError(Exception): pass
 
@@ -207,7 +207,7 @@ def check_parser_arguments():
         if(is_argument_set(arg) == True):
             intersected_args.append(arg)
     return intersected_args
-
+    
 
 if __name__ == "__main__":
     parser = ThrowingArgumentParser()
@@ -246,7 +246,7 @@ if __name__ == "__main__":
                     print("No matches :(")
         else:
             if(len(secondary_args) == 0):
-                print("Bad usage.\n")
+                print("Bad usage. Need to specify an options.\n")
                 parser.print_help()
                 exit(1)
             else:
@@ -282,7 +282,7 @@ if __name__ == "__main__":
                     print("No matches :(")
         else:
             if(len(secondary_args2) == 0):
-                print("Bad usage.\n")
+                print("Bad usage. Need to specify an options.\n")
                 parser.print_help()
                 exit(1)
             else:
@@ -293,12 +293,12 @@ if __name__ == "__main__":
                     print("No matches :(")
                 
     elif(stdin_flag == 0 and args.file == 1):
-        print("Bad usage: is possible to use STDIN or file, not both.\n")
+        print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
         parser.print_help()
         exit(1)
     else:
         print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
-        parser.print_help()
+        #parser.print_help()
         exit(1)
 
 # %%
