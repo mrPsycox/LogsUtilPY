@@ -14,27 +14,32 @@ class ThrowingArgumentParser(argparse.ArgumentParser):
         raise ArgumentParserError(message)
 
 def first_lines(text,numlines):
+    if(type(text) is not list):
+        raise TypeError("text must be a list")
     if(type(int(numlines)) is not int):
-        print("--first option need a whole number to be executed! \n Please try again passing an int value\n")
-        exit(1)
+        raise TypeError("numlines must be an int")
     n = int(numlines)
-    if(n > len(text)):
-        print("Input text doesn't have %d lines. Please insert a valid value") % (n)
+    if(n >= len(text)):
+        print("Input text doesn't have %d lines. Please insert a valid value\n" % (n,))
         exit(1)
     tmp = str()
     i = 0
     for i in range(0,n):
-        tmp += text[i]
+        if(type(text[i]) is not str):
+            raise TypeError("text must be a list of string")
+        else:
+            tmp += text[i]
 
     return tmp[:-1]
 
+#%%
 def last_lines(text,numlines):
     if(type(int(numlines)) is not int):
         print("--last option need a whole number to be executed! \n Please try again passing an int value\n")
         exit(1)
     n = int(numlines)
     if(n > len(text)):
-        print("Input text doesn't have %d lines. Please insert a valid value") % (n)
+        print("Input text doesn't have %d lines. Please insert a valid value\n" % (n,))
         exit(1)
     ret = str()
     last_lines = text[-n:]
@@ -43,6 +48,8 @@ def last_lines(text,numlines):
 
     return ret[:-1]
 
+
+#%%
 def timestamps(text):
     ret =""
     finds = re.findall("^.*(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d).*",text,re.MULTILINE)
