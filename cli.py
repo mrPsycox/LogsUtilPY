@@ -30,13 +30,14 @@ def first_lines(text,numlines):
         else:
             tmp += text[i]
 
-    return tmp[:-1]
+    return tmp.strip()
 
 #%%
 def last_lines(text,numlines):
+    if(type(text) is not list):
+        raise TypeError("text must be a list")
     if(type(int(numlines)) is not int):
-        print("--last option need a whole number to be executed! \n Please try again passing an int value\n")
-        exit(1)
+        raise TypeError("numlines must be an int")
     n = int(numlines)
     if(n > len(text)):
         print("Input text doesn't have %d lines. Please insert a valid value\n" % (n,))
@@ -44,9 +45,12 @@ def last_lines(text,numlines):
     ret = str()
     last_lines = text[-n:]
     for i in range(0,len(last_lines)):
-        ret += last_lines[i]
+        if(type(last_lines[i]) is not str):
+             raise TypeError("text must be a list of string")
+        else:
+            ret += last_lines[i]
 
-    return ret[:-1]
+    return ret.strip()
 
 
 #%%
