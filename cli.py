@@ -55,6 +55,8 @@ def last_lines(text,numlines):
 
 #%%
 def timestamps(text):
+    if(type(text) is not str):
+        raise TypeError("text must be a string")
     ret =""
     finds = re.findall("^.*(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d).*",text,re.MULTILINE)
     if(len(finds) == 0):
@@ -62,9 +64,11 @@ def timestamps(text):
     else:
         for line in finds:
             ret += (line + "\n")
-    return ret
+    return ret.strip()
 
 def ipv4(text):
+    if(type(text) is not str):
+        raise TypeError("text must be a string")
     ret = ""
     ipv4_regex = r'''.*(?:^|\b(?<!\.))(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:1?\d?\d|2[0-4]\d|25[0-5])){3}(?=$|[^\w.]).*'''
     finds = re.findall(ipv4_regex,text,re.MULTILINE)
@@ -76,6 +80,8 @@ def ipv4(text):
     return ret
 
 def ipv6(text):
+    if(type(text) is not str):
+        raise TypeError("text must be a string")
     ret = ""
     for line in text.split("\n"):
         if(re.match("^.*(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$).*",line)):

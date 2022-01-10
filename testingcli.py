@@ -1,3 +1,4 @@
+from typing import Text
 from cli import last_lines, first_lines, timestamps, ipv4, ipv6
 import unittest
 import logging
@@ -83,6 +84,26 @@ class last_lines_testclass(unittest.TestCase):
 
 class timestamps_testclass(unittest.TestCase):
     def test_timestamps(self):
+
+        text = "primalineaaaaaaaaaaaaaaaaaaaaaaaa 192.169.2.34 23:42:58\nsecondalinea\n3 00:14:23\nfourth line"
+
+        with self.assertRaises(Exception) as context:
+            timestamps([])        
+        self.assertTrue('text must be a string' in str(context.exception))
+
+        with self.assertRaises(Exception) as context2:
+            timestamps(1)        
+        self.assertTrue('text must be a string' in str(context2.exception))
+
+        self.assertEqual(timestamps(text),"primalineaaaaaaaaaaaaaaaaaaaaaaaa 192.169.2.34 23:42:58\n3 00:14:23")
+
+        self.assertEqual(timestamps("primalineaaaaaaaaaaaaaaaaaaaaaaaa192.169.2.3423:42:58\nsecondalinea\n300:14:23\nfourth line"),"primalineaaaaaaaaaaaaaaaaaaaaaaaa192.169.2.3423:42:58\n300:14:23")
+
+        self.assertEqual(timestamps("primalineaaaaaaaaaaaaaaaaaaaaaaaa192.169.2.3423;42:58\nsecondalinea\n300:14;23\nfourth line"),"")
+
+        self.assertEqual(timestamps(""),"")
+
+
         self.assertEqual(timestamps("hi\nthere\nwow\n"), "")
 
 class ipv4_testclass(unittest.TestCase):
