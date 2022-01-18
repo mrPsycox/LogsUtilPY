@@ -32,7 +32,6 @@ def first_lines(text,numlines):
 
     return tmp.strip()
 
-#%%
 def last_lines(text,numlines):
     if(type(text) is not list):
         raise TypeError("text must be a list")
@@ -53,7 +52,7 @@ def last_lines(text,numlines):
     return ret.strip()
 
 
-#%%
+
 def timestamps(text):
     if(type(text) is not str):
         raise TypeError("text must be a string")
@@ -77,7 +76,7 @@ def ipv4(text):
     else:
         for line in finds:
             ret += (line + "\n")
-    return ret
+    return ret.strip()
 
 def ipv6(text):
     if(type(text) is not str):
@@ -88,7 +87,7 @@ def ipv6(text):
             ret += (line + "\n")
         else:
             pass
-    return ret
+    return ret.strip()
 
 #HELPER FUNCTIONS --
 def check_primary_args(primary_args):
@@ -282,11 +281,6 @@ if __name__ == "__main__":
         primary_args2 = check_primary_args(primary_args2_tmp)
         secondary_args2 = check_secondary_args(secondary_args2_tmp)
 
-        #         primary_args_tmp = args_check[0]
-        # secondary_args_tmp = args_check[1]
-        # primary_args = check_primary_args(primary_args_tmp)
-        # # secondary_args = check_secondary_args(secondary_args_tmp)
-
         if(len(primary_args2) != 0):
             text_to_pass2 = primary_args_handler(file_text,primary_args2)
             if(len(secondary_args2) == 0):
@@ -310,12 +304,10 @@ if __name__ == "__main__":
                     print("No matches :(")
                 
     elif(stdin_flag == 0 and args.file == 1):
-        print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
         parser.print_help()
         exit(1)
     else:
         print("Bad usage: please specify <filename.log> or use STDIN to cli.py\n")
-        #parser.print_help()
         exit(1)
 
 # %%
