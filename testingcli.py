@@ -1,8 +1,6 @@
-from typing import Text
-from cli import last_lines, first_lines, timestamps, ipv4, ipv6
+from cli import last_lines, first_lines, timestamps, ipv4, ipv6, highlight_text,check_primary_args
 import unittest
-import logging
-import sys
+from colorama import Fore,Style
 
 class first_lines_testclass(unittest.TestCase):
     def test_firstlines(self):
@@ -136,12 +134,41 @@ class ipv6_testclass(unittest.TestCase):
 
         self.assertEqual(ipv6(text_withipv6),"secondalinea 23:42:58 1.1.1.1 2607:f0d0:1002:0051:0000:0000:0000:0004\nquarta 00:00:00 2607:f0d0:1002:0051:0000:0000:0000:0004")
 
-
         self.assertEqual(ipv6("hi\nthere\nwow\n"), "")
+
+class highlighttext_testclass(unittest.TestCase):
+    def test_highlighttext(self):
+
+        with self.assertRaises(Exception) as context:
+            highlight_text(12,[])        
+        self.assertTrue('text must be a string' in str(context.exception))
+
+        with self.assertRaises(Exception) as context1:
+            highlight_text(["firststring","secondstring"],[])        
+        self.assertTrue('text must be a string' in str(context1.exception))
+
+        with self.assertRaises(Exception) as context2:
+            highlight_text("cena",12)        
+        self.assertTrue('secondary_args must be a list' in str(context2.exception))
+
+        with self.assertRaises(Exception) as context3:
+            highlight_text("cena","list")        
+        self.assertTrue('secondary_args must be a list' in str(context3.exception))
+
+        self.assertEqual(highlight_text(text="",secondary_args=[]),"")
+
+        self.assertEqual(highlight_text("This line need to be colored: 127.0.0.1",["--ipv4"]),f'This line need to be colored: {Fore.RED}127.0.0.1 {Fore.RESET}')
+
+        self.assertEqual(highlight_text("This line need to be colored: 127.0.0.n0\n2607:f0d0:1002:0051:0000:0000:0000:0004\n",["--ipv6"]),f'This line need to be colored: 127.0.0.n0\n{Fore.RED}2607:f0d0:1002:0051:0000:0000:0000:0004{Fore.RESET}\n')
+
+# class check_primary_args(unittest.TestCase):
+#     def test_check_primary_args(self):
+
+#         self.assertEqual(check_primary_args())
+
+
 
 
 
 if __name__ == '__main__':
-    logging.basicConfig( stream=sys.stderr )
-    logging.getLogger( "SomeTest.testSomething" ).setLevel( logging.DEBUG )
     unittest.main()

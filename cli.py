@@ -173,6 +173,10 @@ def secondary_args_handler(text,secondary_args):
     #return final_text
 
 def highlight_text(text,secondary_args):
+    if(type(text) is not str):
+        raise TypeError("text must be a string")
+    if(type(secondary_args)is not list):
+        raise TypeError("secondary_args must be a list")
     ipv4_regex = re.compile(r'(?:^|\b(?<!\.))(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:1?\d?\d|2[0-4]\d|25[0-5])){3}(?=$|[^\w.])')
     ipv6regex = r'''(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$)'''    
     ret = text
@@ -183,10 +187,11 @@ def highlight_text(text,secondary_args):
         ret = re.sub(ipv4_regex, Fore.RED + r'\g<0> ' + Fore.RESET, text)
     elif("--ipv4" not in secondary_args and "--ipv6" in secondary_args):
         ret = re.sub(ipv6regex,Fore.RED + r'\1' + Fore.RESET, text)
-
     return ret
 
 def arguments_handler(used_args):
+    if(type(used_args) is not list):
+        raise TypeError("used_args must be a list")
     target_args = ["--first","--last","--timestamps","--ipv4","--ipv6","-i","-t","-f","-l","-I"]
     priority_args = []
     secondary_args = []
@@ -212,6 +217,8 @@ def stdinput_check():
     return stdinput_flag
 
 def is_argument_set(arg_name):
+    if(type(arg_name) is not str):
+        raise TypeError("arg_name must be a string")
     if arg_name in sys.argv:
         return True 
     return False
@@ -227,7 +234,7 @@ def check_parser_arguments():
 
 if __name__ == "__main__":
     parser = ThrowingArgumentParser()
-    parser = argparse.ArgumentParser(description='Welcome to log parsing utility v1.02, a Python CLI application that will help you parse logs of various kinds.\n\n\nIf FILE is omitted, standard input is used instead.\nIf multiple options are used at once, the result is the intersection of their results.\nExample supported usage:\n------------------------\n./util.py -h\n<prints help>\n\ncat test_0.log | ./util.py --first 10\n<prints the first 10 lines of test_0.log>\n\n./utils.py --timestamps test_2.log\n<prints any lines from test_2.log that contain a timestamp>\n\n',formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Welcome to log parsing utility v1.02, a Python CLI application that will help you parse logs of various kinds.\n\n\nIf FILE is omitted, standard input is used instead.\nIf multiple options are used at once, the result is the intersection of their results.\nExample supported usage:\n------------------------\n./util.py -h\n<prints help>\n\ncat test_0.log | ./util.py --first 10\n<prints the first 10 lines of test_0.log>\n\n./utils.py --timestamps test_2.log\n<prints any lines from test_2.log that contain a timestamp>\n\n./util.py --ipv4 test_3.log\n<prints any lines from test_3.log that contain an IPv4 address>\n\n./util.py --ipv6 test_4.log\n<prints any lines from test_4.log that contain an IPv6 address>\n\n./util.py --ipv4 --last 50 test_5.log\n<prints any of the last 50 lines from test_5.log that contain an IPv4 address>\n==============================================================================\n',formatter_class=RawTextHelpFormatter)
     parser.add_argument('-f',"--first",action='store',required=False,default=None, help="Print first NUM lines")
     parser.add_argument('-l',"--last",action='store',required=False,default=None, help="Print last NUM lines")
     parser.add_argument('-t',"--timestamps",action='store_true',required=False,default=None, help="Print lines that contain a timestamp in HH:MM:SS format")
