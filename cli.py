@@ -51,8 +51,6 @@ def last_lines(text,numlines):
 
     return ret.strip()
 
-
-
 def timestamps(text):
     if(type(text) is not str):
         raise TypeError("text must be a string")
@@ -91,35 +89,43 @@ def ipv6(text):
 
 #HELPER FUNCTIONS --
 def check_primary_args(primary_args):
-    ret = []
+    if(type(primary_args) is not list):
+        raise TypeError("primary_args must to be a list.")
+    tmp = []
     for i, word in enumerate(primary_args):
         if(word == "-f"):
-            primary_args[i] = "--first"
+            tmp.append("--first")
         elif(word == "-l"):
-            primary_args[i] = "--last"
+            tmp.append("--last")
         else:
             pass
 
-    ret = list(set(primary_args))
+    ret = list(set(tmp))
     return ret
 
 
 def check_secondary_args(secondary_args):
-    ret = []
+    if(type(secondary_args) is not list):
+        raise TypeError("secondary_args must to be a list.")
+    tmp = []
     for j, word in enumerate(secondary_args):
         if(word == "-t"):
-            secondary_args[j] = "--timestamps"
+            tmp.append("--timestamps")
         elif(word == "-i"):
-            secondary_args[j] = "--ipv4"
+            tmp.append("--ipv4")
         elif(word == "-I"):
-            secondary_args[j] = "--ipv6"
+            tmp.append("--ipv6")
         else:
             pass
-    ret = list(set(secondary_args))
+    ret = list(set(tmp))
     return ret
     
 
 def primary_args_handler(text,primary_args):
+    if(type(text) is not str):
+        raise TypeError("text must be a list of strings")
+    if(type(primary_args) is not list):
+        raise TypeError("primary_args must to be a list")
     final_text = ""
     if("--first" in primary_args and "--last" in primary_args):
         input_text_first = first_lines(text,args.first)
@@ -139,6 +145,10 @@ def primary_args_handler(text,primary_args):
 
 
 def secondary_args_handler(text,secondary_args):
+    if(type(text) is not str):
+        raise TypeError("text must be a list of strings")
+    if(type(secondary_args) is not list):
+        raise TypeError("secondary_args must to be a list")
     final_text = ""
     if("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" not in secondary_args):
         timestamps_ret = timestamps(text)

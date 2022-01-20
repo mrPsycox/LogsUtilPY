@@ -1,4 +1,4 @@
-from cli import last_lines, first_lines, timestamps, ipv4, ipv6, highlight_text,check_primary_args
+from cli import last_lines, first_lines, timestamps, ipv4, ipv6, highlight_text,check_primary_args,check_secondary_args,primary_args_handler,secondary_args_handler,arguments_handler, is_argument_set
 import unittest
 from colorama import Fore,Style
 
@@ -161,11 +161,68 @@ class highlighttext_testclass(unittest.TestCase):
 
         self.assertEqual(highlight_text("This line need to be colored: 127.0.0.n0\n2607:f0d0:1002:0051:0000:0000:0000:0004\n",["--ipv6"]),f'This line need to be colored: 127.0.0.n0\n{Fore.RED}2607:f0d0:1002:0051:0000:0000:0000:0004{Fore.RESET}\n')
 
-# class check_primary_args(unittest.TestCase):
-#     def test_check_primary_args(self):
+class check_primary_args_testclass(unittest.TestCase):
+    def test_check_primary_args(self):
 
-#         self.assertEqual(check_primary_args())
+        with self.assertRaises(Exception) as context:
+            check_primary_args(12)        
+        self.assertTrue('primary_args must to be a list.' in str(context.exception))
 
+        self.assertCountEqual(check_primary_args(["-f","-l"]),["--first","--last"])
+
+        self.assertCountEqual(check_primary_args(["-h","-l"]),["--last"])
+
+        self.assertEqual(check_primary_args(["-q","-s"]),[])
+
+    
+class check_secondary_args_testclass(unittest.TestCase):
+    def test_check_secondary_args(self):
+
+        with self.assertRaises(Exception) as context:
+            check_secondary_args(12)        
+        self.assertTrue('secondary_args must to be a list.' in str(context.exception))
+
+        self.assertCountEqual(check_secondary_args(["-f","-i"]),["--ipv4"])
+
+        self.assertCountEqual(check_secondary_args(["-h","-t"]),["--timestamps"])
+
+        self.assertCountEqual(check_secondary_args(["-h","-I"]),["--ipv6"])
+
+        self.assertEqual(check_secondary_args(["-q","-s"]),[])
+
+
+class primary_args_handler_testclass(unittest.TestCase):
+    def test_primary_args_handler(self):
+
+        with self.assertRaises(Exception) as context: 
+            primary_args_handler(1,[])
+        self.assertTrue('text must be a list of strings' in str(context.exception))
+
+
+class secondary_args_handler_testclass(unittest.TestCase):
+    def test_secondary_args_handler(self):
+
+        with self.assertRaises(Exception) as context: 
+            secondary_args_handler(1,[])
+        self.assertTrue('text must be a list of strings' in str(context.exception))
+
+
+
+class arguments_handler_testclass(unittest.TestCase):
+    def test_arguments_handler(self):
+
+        with self.assertRaises(Exception) as context: 
+            arguments_handler(1)
+        self.assertTrue('used_args must be a list' in str(context.exception))
+
+        
+
+class argument_set_testclass(unittest.TestCase):
+    def test_argument_set(self):
+
+        with self.assertRaises(Exception) as context: 
+            is_argument_set(1)
+        self.assertTrue('arg_name must be a string' in str(context.exception))
 
 
 
