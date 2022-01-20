@@ -122,10 +122,11 @@ def check_secondary_args(secondary_args):
     
 
 def primary_args_handler(text,primary_args):
-    if(type(text) is not str):
+    if(type(text) is not list):
         raise TypeError("text must be a list of strings")
-    if(type(primary_args) is not list):
+    elif(type(primary_args) is not list):
         raise TypeError("primary_args must to be a list")
+
     final_text = ""
     if("--first" in primary_args and "--last" in primary_args):
         input_text_first = first_lines(text,args.first)
@@ -146,9 +147,10 @@ def primary_args_handler(text,primary_args):
 
 def secondary_args_handler(text,secondary_args):
     if(type(text) is not str):
-        raise TypeError("text must be a list of strings")
-    if(type(secondary_args) is not list):
+        raise TypeError("text must be a string")
+    elif(type(secondary_args) is not list):
         raise TypeError("secondary_args must to be a list")
+
     final_text = ""
     if("--timestamps" in secondary_args and "--ipv4" not in secondary_args and "--ipv6" not in secondary_args):
         timestamps_ret = timestamps(text)

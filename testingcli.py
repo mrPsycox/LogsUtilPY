@@ -1,6 +1,7 @@
 from cli import last_lines, first_lines, timestamps, ipv4, ipv6, highlight_text,check_primary_args,check_secondary_args,primary_args_handler,secondary_args_handler,arguments_handler, is_argument_set
 import unittest
 from colorama import Fore,Style
+import sys
 
 class first_lines_testclass(unittest.TestCase):
     def test_firstlines(self):
@@ -170,7 +171,7 @@ class check_primary_args_testclass(unittest.TestCase):
 
         self.assertCountEqual(check_primary_args(["-f","-l"]),["--first","--last"])
 
-        self.assertCountEqual(check_primary_args(["-h","-l"]),["--last"])
+        self.assertCountEqual(check_primary_args(["-h","-l","-l"]),["--last"])
 
         self.assertEqual(check_primary_args(["-q","-s"]),[])
 
@@ -182,6 +183,10 @@ class check_secondary_args_testclass(unittest.TestCase):
             check_secondary_args(12)        
         self.assertTrue('secondary_args must to be a list.' in str(context.exception))
 
+        with self.assertRaises(Exception) as context:
+            check_secondary_args("this is not\na list\n")        
+        self.assertTrue('secondary_args must to be a list.' in str(context.exception))
+
         self.assertCountEqual(check_secondary_args(["-f","-i"]),["--ipv4"])
 
         self.assertCountEqual(check_secondary_args(["-h","-t"]),["--timestamps"])
@@ -189,6 +194,10 @@ class check_secondary_args_testclass(unittest.TestCase):
         self.assertCountEqual(check_secondary_args(["-h","-I"]),["--ipv6"])
 
         self.assertEqual(check_secondary_args(["-q","-s"]),[])
+
+        self.assertEqual(check_secondary_args(["-p","-I"]),["--ipv6"])
+
+
 
 
 class primary_args_handler_testclass(unittest.TestCase):
@@ -198,13 +207,37 @@ class primary_args_handler_testclass(unittest.TestCase):
             primary_args_handler(1,[])
         self.assertTrue('text must be a list of strings' in str(context.exception))
 
+        with self.assertRaises(Exception) as context2: 
+            primary_args_handler("ciao",[])
+        self.assertTrue('text must be a list of strings' in str(context2.exception))
+
+        with self.assertRaises(Exception) as context3: 
+            primary_args_handler([],1)
+        self.assertTrue('primary_args must to be a list' in str(context3.exception))
+
+        with self.assertRaises(Exception) as context4: 
+            primary_args_handler([],"this is not a list but is a string")
+        self.assertTrue('primary_args must to be a list' in str(context4.exception))
+
 
 class secondary_args_handler_testclass(unittest.TestCase):
     def test_secondary_args_handler(self):
 
         with self.assertRaises(Exception) as context: 
             secondary_args_handler(1,[])
-        self.assertTrue('text must be a list of strings' in str(context.exception))
+        self.assertTrue('text must be a string' in str(context.exception))
+
+        with self.assertRaises(Exception) as context2: 
+            secondary_args_handler(["ciao"],[])
+        self.assertTrue('text must be a string' in str(context2.exception))
+
+        # with self.assertRaises(Exception) as context3: 
+        #     secondary_args_handler(["hey"],1)
+        # self.assertTrue('secondary_args must to be a list' in str(context3.exception))
+
+        # with self.assertRaises(Exception) as context4: 
+        #     secondary_args_handler([],"this is not a list but is a string")
+        # self.assertTrue('secondary_args must to be a list' in str(context4.exception))
 
 
 
@@ -215,14 +248,33 @@ class arguments_handler_testclass(unittest.TestCase):
             arguments_handler(1)
         self.assertTrue('used_args must be a list' in str(context.exception))
 
+        with self.assertRaises(Exception) as context: 
+            arguments_handler("hello my dear")
+        self.assertTrue('used_args must be a list' in str(context.exception))
+
+        self.assertEqual(arguments_handler(["-h","-i","-I"]),([],["-i","-I"]))
+
+        self.assertEqual(arguments_handler(["-h","-i","-I","--first","-ip"]),(["--first"],["-i","-I"]))
+
         
 
 class argument_set_testclass(unittest.TestCase):
     def test_argument_set(self):
 
+        sys.argv = ["--try","--first","nogood","-l"]
+
         with self.assertRaises(Exception) as context: 
             is_argument_set(1)
         self.assertTrue('arg_name must be a string' in str(context.exception))
+
+        self.assertEqual(is_argument_set("--try"),True)
+
+        self.assertEqual(is_argument_set("--no"),False)
+
+        self.assertEqual(is_argument_set("-l"),True)
+
+
+
 
 
 
