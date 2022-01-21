@@ -231,13 +231,6 @@ class secondary_args_handler_testclass(unittest.TestCase):
             secondary_args_handler(["ciao"],[])
         self.assertTrue('text must be a string' in str(context2.exception))
 
-        # with self.assertRaises(Exception) as context3: 
-        #     secondary_args_handler(["hey"],1)
-        # self.assertTrue('secondary_args must to be a list' in str(context3.exception))
-
-        # with self.assertRaises(Exception) as context4: 
-        #     secondary_args_handler([],"this is not a list but is a string")
-        # self.assertTrue('secondary_args must to be a list' in str(context4.exception))
 
 
 
@@ -256,7 +249,6 @@ class arguments_handler_testclass(unittest.TestCase):
 
         self.assertEqual(arguments_handler(["-h","-i","-I","--first","-ip"]),(["--first"],["-i","-I"]))
 
-        
 
 class argument_set_testclass(unittest.TestCase):
     def test_argument_set(self):
@@ -272,11 +264,6 @@ class argument_set_testclass(unittest.TestCase):
         self.assertEqual(is_argument_set("--no"),False)
 
         self.assertEqual(is_argument_set("-l"),True)
-
-
-
-
-
 
 
 if __name__ == '__main__':
